@@ -1,0 +1,423 @@
+<!DOCTYPE html>  <html> <head>   <title>fleshing-out-backbone.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               fleshing-out-backbone.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <blockquote>
+  <p>“Never grow a wishbone, daughter, where your backbone ought to be.”</p>
+  
+  <blockquote>
+    <p>-- Clementine Paddleford</p>
+  </blockquote>
+</blockquote>
+
+<h2>Contrived Example: Ordering Lunch</h2>
+
+<p><code>~/.js/docs.google.com.js</code></p>
+
+<p>Wrote a sort of greasemonkey style userscript for
+<a href="http://defunkt.io/dotjs/">dotjs</a> to use
+<a href="http://harvesthq.github.com/chosen/">chosen.js</a> for the google docs
+lunch order form</p>
+
+<p><img src="/chosen-google-docs.jpg" alt="awesome lunch order" title="" /></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="nx">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">var</span> <span class="nv">chosenUrl = </span><span class="s2">&quot;http://harvesthq.github.com/chosen/chosen/chosen.jquery.js&quot;</span><span class="p">;</span>
+  <span class="nx">var</span> <span class="nv">jQueryUrl = </span><span class="s2">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;</span><span class="p">;</span>
+
+  <span class="nx">var</span> <span class="nx">old</span><span class="nv">$ = </span><span class="nx">$</span><span class="p">.</span><span class="nx">noConflict</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+  <span class="err">// Set name for lunch order form</span>
+  <span class="nx">old$</span><span class="p">(</span><span class="s2">&quot;input[name=\&quot;entry.0.single\&quot;]&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;Greg&#39;</span><span class="p">);</span>
+
+  <span class="err">// Load chosen.js CSS</span>
+  <span class="nx">old$</span><span class="p">(</span><span class="s1">&#39;head&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;link rel=&quot;stylesheet&quot; href=&quot;http://harvesthq.github.com/chosen/chosen/chosen.css&quot; type=&quot;text/css&quot; /&gt;&#39;</span><span class="p">);</span>
+
+  <span class="err">// Load jquery in window (not extension sandbox?)</span>
+  <span class="nx">old$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+    <span class="nv">url: </span><span class="nx">jQueryUrl</span><span class="p">,</span>
+    <span class="nv">dataType: </span><span class="s1">&#39;text&#39;</span><span class="p">,</span>
+    <span class="nv">success: </span><span class="nx">function</span> <span class="p">(</span><span class="nx">script</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">eval</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">script</span><span class="p">);</span> <span class="err">// $.getScript would not work</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;loaded new jQuery&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">jquery</span><span class="p">);</span> <span class="err">// 1.7.1</span>
+
+      <span class="o">/</span><span class="err">/ Load chosen</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="nv">url: </span><span class="nx">chosenUrl</span><span class="p">,</span>
+        <span class="nv">dataType: </span><span class="s1">&#39;text&#39;</span><span class="p">,</span>
+        <span class="nv">success: </span><span class="nx">function</span> <span class="p">(</span><span class="nx">script</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nb">eval</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">script</span><span class="p">);</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;loaded chosen&#39;</span><span class="p">);</span>
+
+          <span class="err">// Prettify inputs</span>
+          <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;select&quot;</span><span class="p">).</span><span class="nx">chosen</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Two nested callbacks isn't bad. How bad can three or four be?</h2>
+
+<p>I'll leave <code>;</code>'s to remember my way. Just <code>(function() { that =
+ this</code>, <code>({ functie̸n</code>, <code>;</code> &amp;&amp; <code>self = _this?</code> and hmm, i̧nde͢nt off
+ the͢ e͢cond, 3d mΘnitor, on, e̸n, e̸on what?‽ fm ̡n͘o my​ eye͢s̸ ̛l̕ik͏ liq​ͮ̂҉̯͈͕̹̘̱uid
+ pain, can you see ̲͚̖͔̙î̩́t̲͎̩̱͔́̋̀ it is Man ALL IS LOŚ͖̩͇̗̪̏̈́T ALL I​S LOST FACE MY FACE …
+ ᵒh god no NO NOO̼O​O NΘ stop the an​*̶͑̾̾​̅ͫ͏̙̤g͇̫͛͆̾ͫ̑͆l͖͉̗̩̳̟̍ͫͥͨe̠̅s ͎a̧͈͖r̽̾̈́͒͑e n​ot rè̑ͧ̌aͨl̘̝̙̃ͤ͂̾̆ ZA̡͊͠͝LGΌ IS TO͇̹̺ͅƝ̴ȳ̳
+ TH̘Ë͖́̉ ͠P̯͍̭O̚​N̐Y̡ H̸̡̪̯ͨ͊̽̅̾̎Ȩ̬̩̾͛ͪ̈́̀́͘ ̶̧̨̱̹̭̯ͧ̾ͬC̷̙̲̝͖ͭ̏ͥͮ͟Oͮ͏̮̪̝͍M̲̖͊̒ͪͩͬ̚̚͜Ȇ̴̟̟͙̞ͩ͌͝S̨̥̫͎̭ͯ̿̔̀ͅ <a href="http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454">so so
+ sorry</a></p>
+
+<h1>...</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p><img src="/backbone.png" alt="backbone.js logo" title="" /></p>
+
+<h1>Can it save us?</h1>
+
+<h2><code>v0.9.2 -- 5.6kb, Packed and gzipped</code></h2>
+
+<h1>What is this? A project for ants?</h1>
+
+<h1>(╯°□°）╯︵ ┻━┻</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <blockquote>
+  <p>"A micro-framework does one thing and one thing only — and does it well."</p>
+  
+  <blockquote>
+    <p>-- <a href="http://microjs.com/">microjs.com</a></p>
+  </blockquote>
+</blockquote>
+
+<h3>Why use a microframework?</h3>
+
+<ol>
+<li>Simpler and smaller codebase</li>
+<li>Load what we need (polyfills, shims, etc.)</li>
+<li>Use what we want</li>
+<li>Understand what we're using (security)</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h1>What does Backbone.js do?</h1>
+
+<blockquote>
+  <p>"Backbone.js gives structure to web applications by providing
+  <strong>models</strong> with key-value binding and custom events,
+  <strong>collections</strong> with a rich API of enumerable functions, <strong>views</strong>
+  with declarative event handling, and connects it all to your
+  existing API over a RESTful JSON interface."</p>
+  
+  <blockquote>
+    <p>-- <a href="http://documentcloud.github.com/backbone/">Backbone.js docs</a></p>
+  </blockquote>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h2>Lets try this</h2>
+
+<p>Error: <code>Uncaught TypeError: Cannot call method 'extend' of undefined</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">ourHtml = </span><span class="s1">&#39;&lt;script src=&quot;http://documentcloud.github.com/backbone/backbone.js&quot;&gt;&lt;/script&gt;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>with dependencies</h2>
+
+<p>not so micro now, but still small ~45 k (gzipped and minified)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">ourHtmlWithDependencies = </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">&lt;script src=&quot;http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s1">&lt;script src=&quot;http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s1">&lt;script src=&quot;http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s1">&lt;script src=&quot;http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.2/backbone-min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s1">&#39;&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Making a new view:</p>
+
+<pre><code>e.View
+  el: HTMLDivElement
+  options: Object
+</code></pre>
+
+<p>makes an object with a div element and an options object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Making a new model:</p>
+
+<pre><code>e.Model
+  _escapedAttributes: Object
+  _previousAttributes: Object
+  attributes: Object
+  cid: "c0"
+</code></pre>
+
+<p>makes an object with an attributes object and a client id <code>cid</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Making a new collection:</p>
+
+<pre><code>e.Collection
+  _boundOnModelEvent: function () { [native code] }
+  _byCid: Object
+  _byId: Object
+  length: 0
+  models: Array[0]
+</code></pre>
+
+<p>makes an object iwth a models array and a length.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h4>exciting. How could this possibly be useful?</h4>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h1>We have to go deeper.</h1>
+
+<h1><img src="/underscore.png" alt="underscore.js logo" title="" /></h1>
+
+<h2>What can I do with it?</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Make premeditated example data</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">digits = </span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">_</span><span class="p">.</span><span class="nx">range</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="nb">String</span>
+<span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>Write Object Oriented Style code</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">(</span><span class="nx">digits</span><span class="p">).</span><span class="nx">shuffle</span><span class="p">()</span>
+<span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;9&quot;</span><span class="p">]</span><span class="o">`</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Use the chain wrapper to chain</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">chain</span><span class="p">(</span><span class="nx">digits</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">shuffle</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">map</span><span class="p">(</span> <span class="nf">(n) -&gt;</span> <span class="nx">n</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">)</span>
+    <span class="p">.</span><span class="nx">first</span><span class="p">()</span>
+    <span class="p">.</span><span class="nx">value</span><span class="p">()</span>
+<span class="mi">14</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3>Write Functional Style code</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">shuffle</span> <span class="nx">digits</span>
+<span class="p">[</span><span class="s2">&quot;9&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="s2">&quot;7&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;6&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">]</span>
+
+<span class="nv">double = </span><span class="nf">(n) -&gt;</span> <span class="nx">n</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="nv">firstDoubledShuffled = </span><span class="nx">_</span><span class="p">.</span><span class="nx">compose</span> <span class="nx">double</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">first</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">shuffle</span>
+<span class="nx">firstDoubledShuffled</span> <span class="nx">digits</span>
+<span class="mi">12</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Bind a function's context and arguments
+(partial application/currying not event binding)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">add = </span><span class="nf">(left_number, right_number) -&gt;</span> <span class="nx">left_number</span> <span class="o">+</span> <span class="nx">right_number</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>bind add to new <code>this</code> object and set left_number to always be 2</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">add2 = </span><span class="nx">_</span><span class="p">.</span><span class="nx">bind</span> <span class="nx">add</span><span class="p">,</span> <span class="p">{},</span> <span class="mi">2</span>
+<span class="nx">add2</span> <span class="mi">2</span>
+<span class="mi">4</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h3>Understand how Backbone works</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>John Resig's micro templating
+compile and bind variables</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="s1">&#39;Food for &lt;%= noun =&gt;.&#39;</span><span class="p">)({</span> <span class="nv">noun: </span><span class="s1">&#39;pants&#39;</span> <span class="p">})</span>
+<span class="s2">&quot;Food for pants.&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Use mustache templates</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_.templateSettings = interpolate : </span><span class="sr">/\{\{(.+?)\}\}/g</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="s1">&#39;Food for {{noun}}.&#39;</span><span class="p">)({</span> <span class="nv">noun: </span><span class="s1">&#39;awhile&#39;</span> <span class="p">})</span>
+<span class="s2">&quot;Food for awhile.&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Return a value or call a function of the same name</p>
+
+<blockquote>
+  <p>example from the <a href="http://documentcloud.github.com/underscore/#result">docs</a></p>
+</blockquote>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">object = </span><span class="p">{</span><span class="nv">cheese: </span><span class="s1">&#39;crumpets&#39;</span><span class="p">,</span> <span class="nv">stuff: </span><span class="nx">function</span><span class="p">(){</span> <span class="k">return</span> <span class="s1">&#39;nonsense&#39;</span><span class="p">;</span> <span class="p">}};</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">result</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="s1">&#39;cheese&#39;</span><span class="p">);</span>
+<span class="s2">&quot;crumpets&quot;</span>
+<span class="nx">_</span><span class="p">.</span><span class="nx">result</span><span class="p">(</span><span class="nx">object</span><span class="p">,</span> <span class="s1">&#39;stuff&#39;</span><span class="p">);</span>
+<span class="s2">&quot;nonsense&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Copy attributes from right object into left object.
+Overwrites keys in left object.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{</span><span class="nv">foo: </span><span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="nv">foo: </span><span class="mi">2</span><span class="p">,</span> <span class="nv">baz: </span><span class="mi">3</span><span class="p">}</span>
+<span class="p">{</span><span class="nv">foo: </span><span class="mi">2</span><span class="p">,</span> <span class="nv">baz: </span><span class="mi">3</span><span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <h3>And much, much more in <a href="http://documentcloud.github.com/underscore/">docs</a> and <a href="http://documentcloud.github.com/underscore/docs/underscore.html">source</a></h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h1>Anyway</h1>
+
+<h2>Let's make an evil webform</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <h3>Just a button</h3>
+
+<p><a href="http://jsfiddle.net/z6SAB/1/">Live Example</a></p>
+
+<p>html in <code>body</code>:
+ <code>'&lt;form id="mwahahaha"&gt;&lt;/form&gt;'</code></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Add some attributes to the Backbone.View object. In Backbone
+<code>extend</code> also sets the prototype and constructor.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">EvilForm = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>We can set attributes for our new element</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">id: </span><span class="s1">&#39;mwhahaha&#39;</span>
+      <span class="nv">tagName: </span><span class="s1">&#39;form&#39;</span>
+      <span class="nv">className: </span><span class="s1">&#39;neutral evil&#39;</span>
+      <span class="nv">attributes:</span>
+        <span class="nv">style: </span><span class="s1">&#39;color:grey&#39;</span>
+
+      <span class="nv">render: </span><span class="nf">() -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>Update our html using <code>this.$el</code> the cached jQuery selector
+for our view. Do this in one place to only trigger one
+browser reflow or repaint</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span> <span class="s1">&#39;&lt;input type=&quot;button&quot; value=&quot;Finish Form?&quot;/&gt;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Return <code>this</code> from the function to allow method chaining</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="err">@</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Use an element already in the DOM when constructing our
+view instead of of creating a new element:</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">form = </span><span class="k">new</span> <span class="nx">EvilForm</span>
+      <span class="nv">el: </span><span class="nx">$</span> <span class="s1">&#39;#mwhahaha&#39;</span>
+    <span class="nx">form</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <p>Or we can make a new EvilForm HTMLElement and attach it to the
+DOM</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">form = </span><span class="k">new</span> <span class="nx">EvilForm</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">).</span><span class="nx">append</span> <span class="nx">form</span><span class="p">.</span><span class="nx">render</span><span class="p">().</span><span class="nx">el</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <h3>Making Something Bad Happen</h3>
+
+<p>html in <code>body</code>:
+ <code>'&lt;form id="mwahahaha"&gt;&lt;/form&gt;'</code></p>
+
+<p><a href="http://jsfiddle.net/z6SAB/2/">Live Example</a></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+
+    <span class="nv">EvilForm = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
+      <span class="nv">id: </span><span class="s1">&#39;mwhahaha&#39;</span>
+      <span class="nv">tagName: </span><span class="s1">&#39;form&#39;</span>
+      <span class="nv">className: </span><span class="s1">&#39;neutral evil&#39;</span>
+      <span class="nv">attributes:</span>
+        <span class="nv">style: </span><span class="s1">&#39;color:grey&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Call <code>this.finishForm</code> when any input element in this form is
+clicked.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">events:</span>
+        <span class="s2">&quot;click input&quot;</span><span class="o">:</span> <span class="s2">&quot;finishForm&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>Events are bound to the view and delegate on their selector
+when the view is constructed. This is also valid:</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">events: </span><span class="o">-&gt;</span>
+        <span class="s2">&quot;click input&quot;</span><span class="o">:</span> <span class="nf">(event) -&gt;</span>
+            <span class="nx">alert</span> <span class="s2">&quot;You&#39;re almost done. We&#39;ll be with you shortly.&quot;</span>
+            <span class="err">@</span>
+
+      <span class="nv">finishForm: </span><span class="nf">(event) -&gt;</span>
+        <span class="nx">alert</span> <span class="s2">&quot;You&#39;re almost done. We&#39;ll be with you shortly.&quot;</span>
+        <span class="err">@</span>
+
+      <span class="nv">render: </span><span class="nf">() -&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span> <span class="s1">&#39;&lt;input type=&quot;button&quot; value=&quot;Finish Form?&quot;/&gt;&#39;</span>
+        <span class="err">@</span>
+
+    <span class="nv">form = </span><span class="k">new</span> <span class="nx">EvilForm</span>
+      <span class="nv">el: </span><span class="nx">$</span> <span class="s1">&#39;#mwhahaha&#39;</span>
+    <span class="nx">form</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <h3>Evil Models</h3>
+
+<p>html in body:
+ <code>'&lt;form id="mwahahaha"&gt;&lt;/form&gt;'</code></p>
+
+<p><a href="http://jsfiddle.net/z6SAB/3/">Live Example</a></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">_.templateSettings = interpolate : </span><span class="sr">/\{\{(.+?)\}\}/g</span>
+
+<span class="nv">EvilMessage = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span>
+  <span class="nv">defaults:</span>
+    <span class="nv">content: </span><span class="s1">&#39;&#39;</span>
+
+<span class="nv">EvilMessageBox = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">.</span><span class="nx">extend</span>
+    <span class="nv">model: </span><span class="nx">EvilMessage</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Add a model to hold some data. The view will update
+this data and it will fire events when it changes.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EvilData = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span>
+  <span class="nv">defaults:</span>
+    <span class="nv">retries: </span><span class="mi">0</span>
+    <span class="nv">messages: </span><span class="kc">null</span>
+
+  <span class="nv">initialize: </span><span class="nf">(options) -&gt;</span>
+    <span class="k">if</span> <span class="nx">options</span> <span class="o">and</span> <span class="nx">options</span><span class="p">.</span><span class="nx">messages</span>
+      <span class="vi">@messages = </span><span class="k">new</span> <span class="nx">EvilMessageBox</span>
+      <span class="nx">@messages</span><span class="p">.</span><span class="nx">add</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="nx">options</span><span class="p">.</span><span class="nx">messages</span><span class="p">,</span> <span class="nf">(str) -&gt;</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span> <span class="nv">content: </span><span class="nx">str</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Backbone uses it's own getter and setter function instead of
+updating attributes directly so it can publish <code>change</code>
+events. This could change with <code>__defineGetter__</code> and
+<code>__defineSetter__</code> in future Javascript versions <a href="http://ejohn.org/blog/javascript-getters-and-setters/">(see also)</a>.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">@set</span> <span class="nv">messages: </span><span class="nx">@messages</span>
+
+  <span class="nv">getDeceptivelyEncouragingMessage: </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>Backbone.Collection proxies underscore collection methods</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_</span><span class="p">.</span><span class="nx">first</span> <span class="nx">_</span><span class="p">.</span><span class="nx">shuffle</span> <span class="nx">@messages</span><span class="p">.</span><span class="nx">pluck</span> <span class="s1">&#39;content&#39;</span>
+
+  <span class="nv">incrementRetries: </span><span class="nf">() -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>Count a successful frustrated click</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@set</span> <span class="nv">retries: </span><span class="nx">@get</span><span class="p">(</span><span class="s1">&#39;retries&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+    <span class="err">@</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+
+   <span class="nv">EvilForm = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
+      <span class="nv">id: </span><span class="s1">&#39;mwhahaha&#39;</span>
+      <span class="nv">tagName: </span><span class="s1">&#39;form&#39;</span>
+      <span class="nv">className: </span><span class="s1">&#39;neutral evil&#39;</span>
+      <span class="nv">attributes:</span>
+        <span class="nv">style: </span><span class="s1">&#39;color:grey&#39;</span>
+
+      <span class="nv">events:</span>
+        <span class="s2">&quot;click input&quot;</span><span class="o">:</span> <span class="s2">&quot;finishForm&quot;</span>
+
+      <span class="nv">initialize: </span><span class="nf">(options) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p><code>model</code> and <code>collection</code> also get automatically attached to
+the view get set on the view if they're given.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s1">&#39;@model in initialize&#39;</span><span class="p">,</span> <span class="nx">@model</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>If our templates depend on data from the model we can
+rerender ourselves on model changes events to keep the
+view and the model in sync</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">@model</span><span class="p">.</span><span class="kc">on</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="nx">@render</span><span class="p">,</span> <span class="err">@</span>
+
+
+      <span class="nv">finishForm: </span><span class="nf">(event) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Show different messages so they think something is happening</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">alert</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">getDeceptivelyEncouragingMessage</span><span class="p">()</span>
+        <span class="nx">@model</span><span class="p">.</span><span class="nx">incrementRetries</span><span class="p">()</span>
+        <span class="err">@</span>
+
+      <span class="nv">render: </span><span class="nf">() -&gt;</span>
+        <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span> <span class="s1">&#39;&lt;input type=&quot;button&quot; value=&quot;Finish Form?&quot;/&gt;&#39;</span>
+        <span class="err">@</span>
+
+    <span class="nv">form = </span><span class="k">new</span> <span class="nx">EvilForm</span>
+      <span class="nv">model: </span><span class="k">new</span> <span class="nx">EvilData</span>
+        <span class="nv">messages: </span><span class="p">[</span>
+          <span class="s2">&quot;Thank you for your patience.&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;We value your time on hold.&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Rock out with some lofi Muzak!&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;(╯°□°）╯︵ ┻━┻&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;... soon&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;Patience is a virtue and a person.&quot;</span><span class="p">]</span>
+      <span class="nv">el: </span><span class="nx">$</span> <span class="s1">&#39;#mwhahaha&#39;</span>
+    <span class="nx">form</span><span class="p">.</span><span class="nx">render</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <h3>Valid Evil Messages</h3>
+
+<p><a href="http://jsfiddle.net/54jRN/">Live Example</a></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EvilMessage = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span>
+  <span class="nv">defaults:</span>
+    <span class="nv">content: </span><span class="s1">&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Add a validate function to check for</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">validate: </span><span class="nf">(newAttributes) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Check updated attributes</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="o">not</span> <span class="nx">attributes</span><span class="p">.</span><span class="nx">content</span></pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>Don't use throw
+return something to trigger an error event</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s2">&quot;Empty EvilMessage&quot;</span>
+
+<span class="nv">msg = </span><span class="k">new</span> <span class="nx">EvilMessage</span></pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Listen for error events</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">msg</span><span class="p">.</span><span class="kc">on</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s1">&#39;errors!&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>set and save also take error callbacks</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">msg</span><span class="p">.</span><span class="nx">set</span> <span class="nv">content: </span><span class="kc">null</span>
+<span class="s2">&quot;log: errors!&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <h3>Saving state to the server</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">EvilMessage = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">extend</span>
+  <span class="nv">defaults:</span>
+    <span class="nv">content: </span><span class="s1">&#39;&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <p>A url to save the object to (can be a function).  To provide a
+more responsive interface the client assumes the request will
+succeed.  The model has a client id until it is saved and gets a
+database <code>id</code>.</p>
+
+<p>The default sync handler maps CRUD to REST like so:</p>
+
+<pre><code> create → POST   /collection
+ read → GET   /collection[/id]
+ update → PUT   /collection/id
+ delete → DELETE   /collection/id
+</code></pre>
+
+<p>From the <a href="http://documentcloud.github.com/backbone/">Backbone.js docs</a></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">url: </span><span class="s1">&#39;/evil/messages/&#39;</span>
+
+<span class="nv">msg = </span><span class="k">new</span> <span class="nx">EvilMessage</span>
+<span class="nx">msg</span><span class="p">.</span><span class="nx">save</span><span class="p">()</span>
+<span class="s2">&quot;POST http://maybejustborednotevil.example.com/evil/messages/ 404 (NOT FOUND)&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Can set attributes and pass <code>$.ajax</code> options like success and error callbacks</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">msg</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span>
+  <span class="nv">id: </span><span class="s1">&#39;1234&#39;</span><span class="p">,</span>
+  <span class="nv">success: </span><span class="nf">() -&gt;</span> <span class="c1"># Do victory lap</span>
+  <span class="nv">error: </span><span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;could not save&quot;</span>
+<span class="p">)</span>
+<span class="s2">&quot;PUT http://maybejustborednotevil.example.com/evil/messages/ 404 (NOT FOUND)&quot;</span>
+<span class="s2">&quot;log: could not save&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <h3>Routes</h3>
+
+<p><a href="http://jsfiddle.net/5KmZZ/">Live Example</a>
+(Note: hash fragment not updating)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span> <span class="o">-&gt;</span>
+
+  <span class="nv">BadRedirectRouter = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Router</span><span class="p">.</span><span class="nx">extend</span></pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>Listens for hashchange events</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">routes:</span>
+      <span class="s2">&quot;pong&quot;</span><span class="o">:</span> <span class="s2">&quot;pong&quot;</span>
+      <span class="s2">&quot;ping&quot;</span><span class="o">:</span> <span class="s2">&quot;ping&quot;</span>
+
+    <span class="nv">pong: </span><span class="o">-&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s1">&#39;pong&#39;</span>
+      <span class="nx">@navigate</span> <span class="s1">&#39;ping&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span>
+
+    <span class="nv">ping: </span><span class="o">-&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s1">&#39;ping&#39;</span>
+      <span class="nx">@navigate</span> <span class="s1">&#39;pong&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span>
+
+  <span class="nv">router = </span><span class="k">new</span> <span class="nx">BadRedirectRouter</span></pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>Use HTML5 pushState to update the url directly if available
+and make the back button work correctly</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="nx">history</span> <span class="o">and</span> <span class="nx">history</span><span class="p">.</span><span class="nx">pushState</span>
+    <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span> <span class="nv">pushState: </span><span class="kc">true</span>
+  <span class="k">else</span>
+    <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <p>Update the url to the ping route
+and trigger a hashchange event to hit the route on the router</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">router</span><span class="p">.</span><span class="nx">navigate</span> <span class="s1">&#39;ping&#39;</span><span class="p">,</span> <span class="nv">trigger: </span><span class="kc">true</span></pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <p>Logs: ping pong ...
+and cycles between <code>#ping</code> and <code>#pong</code></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <h3>Backbone and other client side frameworks let us</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <ul>
+<li>Use events instead of callbacks</li>
+<li>Organize our code as <a href="http://dvcs.w3.org/hg/webcomponents/raw-file/tip/explainer/index.html">web components</a> of (model, view, template)</li>
+<li>Only transmit data to from the server</li>
+<li>With HTML5, construct and publish a desktop application experience</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <h1>Let's make something:</h1>
+
+<ul>
+<li>Flashcards</li>
+<li>Tic Tac Toe</li>
+<li>Not To Do list</li>
+<li>Chat server</li>
+</ul>
+
+<p>My chat server:</p>
+
+<pre><code> ...
+ ...
+ (crickets)
+ ...
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <h2>Documentaton</h2>
+
+<ul>
+<li><a href="http://documentcloud.github.com/underscore/">Docs</a></li>
+<li><a href="http://documentcloud.github.com/underscore/docs/underscore.html">Annotated Source</a></li>
+<li><a href="https://github.com/documentcloud/backbone/wiki/Tutorials%2C-blog-posts-and-example-sites">Tutorials</a></li>
+<li><a href="http://documentcloud.github.com/backbone/#examples">Examples</a></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <h1>Addenda</h1>
+
+<h3>Why I couldn't make you a SVG based game with Backbone</h3>
+
+<ol>
+<li>Got the laziness</li>
+<li>SVG is not HTML</li>
+</ol>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">MyView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">extend</span>
+
+  <span class="s1">&#39;... snip ...&#39;</span>
+
+  <span class="nv">template: </span><span class="nx">_</span><span class="p">.</span><span class="nx">template</span> <span class="s1">&#39;&lt;svg:rect x=&quot;{{x}}&quot; y=&quot;{{y}}&quot; height=&quot;{{height}}&quot; width=&quot;{{width}}&quot;&gt;&lt;/svg:rect&gt;&#39;</span>
+
+  <span class="nv">render: </span><span class="nf">() -&gt;</span>
+    <span class="nx">@$el</span><span class="p">.</span><span class="nx">html</span> <span class="nx">@template</span> <span class="nx">@model</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span>
+    <span class="err">@</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">make</span>
+<span class="nx">function</span><span class="p">(</span><span class="nx">tagName</span><span class="p">,</span> <span class="nx">attributes</span><span class="p">,</span> <span class="nx">content</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">var</span> <span class="nv">el = </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="nx">tagName</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">attributes</span><span class="p">)</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="nx">attributes</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">)</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">content</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">el</span><span class="p">;</span>
+<span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>create element with namespace URI</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span> <span class="o">!==</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElment</span>
+<span class="kc">true</span></pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <h3>Why not use <code>class MyView extends Backbone.View</code>?</h3>
+
+<p>It compiles to:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="o">/</span><span class="err">/ Generated by CoffeeScript 1.3.1</span>
+<span class="p">(</span><span class="nx">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">var</span> <span class="nx">MyView</span><span class="p">,</span>
+    <span class="nv">__hasProp = </span><span class="p">{}.</span><span class="nx">hasOwnProperty</span><span class="p">,</span>
+    <span class="nv">__extends = </span><span class="nx">function</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">parent</span><span class="p">)</span> <span class="p">{</span> <span class="k">for</span> <span class="p">(</span><span class="nx">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">parent</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">__hasProp</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">parent</span><span class="p">,</span> <span class="nx">key</span><span class="p">))</span> <span class="nx">child</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span> <span class="p">}</span> <span class="nx">function</span> <span class="nx">ctor</span><span class="p">()</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nv">constructor = </span><span class="nx">child</span><span class="p">;</span> <span class="p">}</span> <span class="nv">ctor.prototype = </span><span class="nx">parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span> <span class="nv">child.prototype = </span><span class="k">new</span> <span class="nx">ctor</span><span class="p">;</span> <span class="nv">child.__super__ = </span><span class="nx">parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span> <span class="k">return</span> <span class="nx">child</span><span class="p">;</span> <span class="p">};</span>
+
+  <span class="nv">MyView = </span><span class="p">(</span><span class="nx">function</span><span class="p">(</span><span class="nx">_super</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="nx">__extends</span><span class="p">(</span><span class="nx">MyView</span><span class="p">,</span> <span class="nx">_super</span><span class="p">);</span>
+
+    <span class="nv">MyView.name = </span><span class="s1">&#39;MyView&#39;</span><span class="p">;</span>
+
+    <span class="nx">function</span> <span class="nx">MyView</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">MyView</span><span class="p">.</span><span class="nx">__super__</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">MyView</span><span class="p">;</span>
+
+  <span class="p">})({});</span>
+
+<span class="p">}).</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+<span class="nv">MyView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">extend</span> <span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>Compiles to:</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="o">/</span><span class="err">/ Generated by CoffeeScript 1.3.1</span>
+<span class="p">(</span><span class="nx">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">var</span> <span class="nx">MyView</span><span class="p">;</span>
+
+  <span class="nv">MyView = </span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">extend</span><span class="p">({});</span>
+
+<span class="p">}).</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
